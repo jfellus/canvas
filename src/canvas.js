@@ -115,9 +115,10 @@ class Element {
   }
 
   createGL() {
-    this.gl = new Shape(this, 0,0);
+    this.gl = new GLPixmap(this, 100, 100);
+    this.gl.setSize(15,15);
     window.setInterval(() => {
-      this.gl.animate();
+      this.test_animate();
     }, 40);
   }
 
@@ -125,9 +126,23 @@ class Element {
 
   createSVG() {
     this.elt.append($SVG("circle").attr("r", 20));
-    this.elt.append($SVG("text").attr("text-anchor", "middle").attr("y", 30).html("prout"));
+    this.elt.append($SVG("text").attr("text-anchor", "middle").attr("y", 30).html("aurore"));
     this.elt.mousedown((e)=> { this.canvas.selection = this; this.canvas.bDragging = true; });
   }
+
+  updateData() {
+    if(this.gl) this.gl.texture.update();
+    this.redraw();
+  }
+
+  test_animate() {
+    for(var i=0;i<100*100; i++) {
+      this.data[i*4] = this.data[i*4]+1;
+      this.data[i*4+3] = 255;
+    }
+    this.updateData();
+  }
+
 
   move(dx,dy) {
     this.x += dx;

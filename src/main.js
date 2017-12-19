@@ -1,6 +1,6 @@
 $(()=> {
 
-  for(var i=0; i<1000; i++) new Element();
+  for(var i=0; i<10; i++) new Element();
 
   $(document).on("keydown", (e) => {
     if(e.which===37) left();
@@ -12,10 +12,10 @@ $(()=> {
 
 function left() {
   var e = curCanvas.elements[0];
-  e.move(e.x - 10, e.y);
+  e.move(-10, 0);
 }
 
 function right() {
   var e = curCanvas.elements[0];
-  e.move(e.x + 10, e.y);
+  e.move(10, 0);
 }
