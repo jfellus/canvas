@@ -11,3 +11,11 @@
 .canvas > svg > * {
   cursor:default;
 }
+
+.canvas line {
+  stroke-width:1px;
+  stroke:black;
+}
+
+.canvas .creator { pointer-events: none; }
+.canvas line.creator { stroke:red; stroke-width:2px;}
