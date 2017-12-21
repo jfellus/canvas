@@ -1,0 +1,25 @@
+- Bounding box
+- Bounding circle
+- Is visible
+    -> GL update only for visible
+- Hit (element)
+- KD
+  -> not with nav
+  -> recompute async after moving
+  -> only for components that need it... (only links ?)
+  -> maybe KD is easier for links (cross cell and that's it...)
+  -> no bezier for now ! -> easy
+- add pass-through points for links nicer drawing
+
+- position linking (e.g. elements<-labels)
+- CSS styling (element image = background CSS)
+
+- undo/redo
+
+- external API
+  - remote editing commands
+  - events sendback
+  - data setting
+  
+
+- bezier (!KD !editing...)

@@ -12,6 +12,8 @@ class Canvas {
     $(elt).on('selectstart dragstart', function(evt){ evt.preventDefault(); return false; });
     this.gl = glInitGL(this.canvas[0]);
     curCanvas = this;
+    this.minX = 0; this.minY = 0;
+    this.maxX = this.svg.width(); this.maxY = this.svg.height();
 
     this.creator = null;
 
@@ -88,6 +90,8 @@ class Canvas {
   pan(dx,dy) {
     this.vx += dx;
     this.vy += dy;
+    this.maxX -= dx; this.minX -= dx;
+    this.maxY -= dy; this.minY -= dy;
     this.redraw();
   }
 
@@ -95,6 +99,7 @@ class Canvas {
     this.vx += (this.vx-x)*a;
     this.vy += (this.vy-y)*a;
     this.vs *= 1+a;
+    // TODO : minX minY maxX maxY
     if(this.vs < 0.001) this.vs = 0.001;
     this.redraw();
   }
@@ -166,28 +171,39 @@ class Element {
     this.ins = []; this.outs = [];
     this.elt = $SVG("g");
     curCanvas.add(this);
-    this.createGL();
+//    this.createGL();
     this.createSVG();
   }
 
   createGL() {
     this.gl = new GLPixmap(this, 100, 100);
     this.gl.setSize(15,15);
-    // window.setInterval(() => {  this.test_animate(); }, 40);
+    window.setInterval(() => {  this.test_animate(); }, 40);
   }
 
   redraw() { this.canvas.redrawOnly(this); }
 
   createSVG() {
     this.elt.append($SVG("circle").attr("r", 20));
-    this.elt.append($SVG("text").attr("text-anchor", "middle").attr("y", 30).html("aurore"));
+    this.elt.append($SVG("text").attr("text-anchor", "middle").attr("y", 30).html("prout"));
     this.elt.mousedown((e)=> { this.canvas.onMousedown(this); });
     this.elt.click((e)=> { this.canvas.onClick(this); });
+    this.updateBoundingBox();
   }
 
   updateData() {
     if(this.gl) this.gl.texture.update();
     this.redraw();
+  }
+
+  updateBoundingBox() {
+    this.bb = this.elt[0].getBBox();
+    this.bb.x += this.x; this.bb.y += this.y;
+  }
+
+  isVisible() {
+    if(!this.bb) this.updateBoundingBox();
+    return !(this.bb.x >= this.canvas.maxX || this.bb.y >= this.canvas.maxY || this.bb.x+this.bb.width < this.canvas.minX || this.bb.y+this.bb.height < this.canvas.minY);
   }
 
   test_animate() {
@@ -206,6 +222,7 @@ class Element {
     this.ins.forEach((l)=>{l.update();});
     this.outs.forEach((l)=>{l.update();});
     this.canvas.redraw();
+    this.updateBoundingBox();
   }
 
   updateKDcode() {
